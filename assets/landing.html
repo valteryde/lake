@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Lake welcome page</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='lake.js') }}" charset="utf-8"></script>
+
+
+    <script type="text/javascript">
+
+      function valterBack() {
+        console.log('hejsa fra serveren')
+      }
+
+      expose(valterBack)
+
+    </script>
+
+
+  </head>
+  <body>
+
+    <a href="app">Link</a>
+
+  </body>
+</html>
