@@ -8,6 +8,8 @@ import time
 from _thread import start_new_thread
 import os, sys #signal
 import json
+import shutil
+import pathlib
 
 from flask import * #pip install package|module
 from .websocket_server import WebsocketServer #file
@@ -19,14 +21,69 @@ URL = 'http://127.0.0.1:5000/_boot_'
 PID = os.getpid()
 SLEEP_TIME = 1#s
 FRONT_FOLDER = 'front'
-DUMMY_DICT = {'intjected_html_files':["landing.html", "redirect.html"]}
-BASE_FOLDER = os.getcwd()
+DUMMY_DICT = {'intjected_html_files':["landing.html", "redirect.html"], 'init':False}
+BASE_FOLDER = pathlib.Path().parent.absolute()
 
 
 
-# *** CODE TO BE PLOTTED INTO FILES
+
+# *** CODE TO BE PLOTTED INTO FILES ***
 HTML_JS_INJECT = """<script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script><script src="{{ url_for('static', filename='lake.js') }}" charset="utf-8"></script>"""
 
+
+# *** get cache ***
+def getCache():
+
+    #open cache
+    if 'lakecache.json' in os.listdir():
+        cache = open('lakecache.json', 'r+')
+        cache_text = cache.read()
+    else:
+        cache = open('lakecache.json', 'w+')
+        dumped = json.dumps(DUMMY_DICT)
+        cache.write(dumped)
+        cache_text = dumped
+
+    # retv cached info into a dict (d)
+    return cache, json.loads(cache_text, strict=False)
+
+
+
+
+# *** init ***
+# create all files and folders
+# to be able to run the lake app
+
+def initLake(overwrite=False):
+    #appFolder = os.sep.join(BASE_FOLDER.split(os.sep)[:])
+
+    f, cache = getCache()
+    if not overwrite:
+        if cache['init']:
+            return
+
+
+    # create front folder
+    os.mkdir(os.path.join(BASE_FOLDER, 'front'))
+
+    # create static and templates folders
+    os.mkdir(os.path.join(BASE_FOLDER, 'front', 'static'))
+    os.mkdir(os.path.join(BASE_FOLDER, 'front', 'templates'))
+
+    # copy lake.js, landing.html, redicret.html (boot)
+    shutil.copyfile(os.path.join(BASE_FOLDER, 'lake', 'assets', 'lake.js'), os.path.join(BASE_FOLDER, 'front', 'static', 'lake.js'))
+    shutil.copyfile(os.path.join(BASE_FOLDER, 'lake', 'assets', 'landing.html'), os.path.join(BASE_FOLDER, 'front', 'templates', 'landing.html'))
+    shutil.copyfile(os.path.join(BASE_FOLDER, 'lake', 'assets', 'redirect.html'), os.path.join(BASE_FOLDER, 'front', 'templates', 'redirect.html'))
+
+    cache['init'] = True
+    f.seek(0)
+    f.truncate()
+    f.write(json.dumps(cache))
+
+# arg pre-init
+if sys.argv[-1] == 'init':
+    initLake(True)
+    sys.exit()
 
 
 
@@ -65,8 +122,12 @@ class Remote:
         self.server.send_message_to_all('[exe]('+str(funcname)+')')
 
 
-
 # *** APP CLASS ***
+# @app.route
+# remote = app.remote
+# @remote.function
+# app.run()
+
 class Lake:
 
     def standardBootPage():
@@ -103,18 +164,7 @@ class Lake:
             return landingpage()
 
 
-        #open cache
-        if 'lakecache.json' in os.listdir():
-            cache = open('lakecache.json', 'r+')
-            cache_text = cache.read()
-        else:
-            cache = open('lakecache.json', 'w+')
-            dumped = json.dumps(DUMMY_DICT)
-            cache.write(dumped)
-            cache_text = dumped
-
-        # retv cached info into a dict (d)
-        d = json.loads(cache_text, strict=False)
+        cache, d = getCache()
 
         # include js into all renders
         for fileName in os.listdir(os.path.join(BASE_FOLDER, FRONT_FOLDER, 'templates')):
@@ -203,6 +253,7 @@ class Lake:
     def run(self):
 
         os.system('clear') #only on darwin && linux
+        initLake()
         start_new_thread(self._startWebsocketServer_, ())
         start_new_thread(webbrowser.open, (URL,))
         self.app.run()

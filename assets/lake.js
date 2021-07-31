@@ -1,4 +1,8 @@
 
+// VALTERT 2021
+// MIT
+
+
 /* HELP */
 function xmpGET(url, callback=function(){}) {
   var xhttp = new XMLHttpRequest();
