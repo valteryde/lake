@@ -80,11 +80,15 @@ def initLake(overwrite=False):
     f.truncate()
     f.write(json.dumps(cache))
 
+
 # arg pre-init
 if sys.argv[-1] == 'init':
     initLake(True)
     sys.exit()
+else:
 
+    # still check
+    initLake()
 
 
 # *** REMOTE CONNECTION ***
@@ -253,7 +257,6 @@ class Lake:
     def run(self):
 
         os.system('clear') #only on darwin && linux
-        initLake()
         start_new_thread(self._startWebsocketServer_, ())
         start_new_thread(webbrowser.open, (URL,))
         self.app.run()
