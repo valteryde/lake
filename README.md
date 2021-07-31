@@ -20,8 +20,8 @@ def appView():
 
 
 @remote.function
-def aFunctionThatCanBeExecutedFromTheBrowser():
-    print('Hejsa fra browseren')
+def aFunctionThatCanBeCalledByTheBrowser():
+    print('Hello from the browser')
 
 if __name__ == '__main__':
     app.run()
