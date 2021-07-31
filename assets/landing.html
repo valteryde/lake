@@ -7,22 +7,76 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script>
     <script src="{{ url_for('static', filename='lake.js') }}" charset="utf-8"></script>
 
+    <style media="screen">
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
-    <script type="text/javascript">
-
-      function valterBack() {
-        console.log('hejsa fra serveren')
+      img {
+        position: absolute;
+        top: 11em;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+      }
+      h1 {
+        font-family: Roboto, sans-serif;
+        position: absolute;
+        top: 0em;
+        left: 50%;
+        transform: translate(-50%);
+        font-weight: 200;
+        font-size: 5em;
+      }
+      h4 {
+        font-family: Roboto, sans-serif;
+        position: absolute;
+        top: 8em;
+        left: 50%;
+        transform: translate(-50%);
+        font-weight: 200;
+        font-size: 1em;
       }
 
-      expose(valterBack)
+      .navbar {
+        position: absolute;
+        top: 5px;
+        left: 10%;
+        width: 80%;
+        height: 40px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr)
+      }
+      .anchorContainer {
+        position: relative;
+        text-align: center;
+      }
+      a {
+        font-family: Roboto, sans-serif;
+        color: black;
+        /*text-decoration: none;*/
+        font-size: 1.3em;
+        position: relative;
+        top: 10px;
+        transition: .2s;
+      }
+      a:hover {
+        color: red;
+      }
 
-    </script>
-
+    </style>
 
   </head>
   <body>
 
-    <a href="app">Link</a>
+    <div class="navbar">
+      <div class="anchorContainer"><a target="_blank" href="https://github.com/valteryde/lake">sourcecode</a></div>
+      <div class="anchorContainer"><a target="_blank" href="https://github.com/valteryde">creator</a></div>
+      <div class="anchorContainer"><a target="_blank" href="https://github.com/valteryde/lake">documentation</a></div>
+    </div>
+
+    <img src="https://static.thenounproject.com/png/345606-200.png" alt="">
+    <h1>Lake</h1>
+    <h4>A lightweight python framework for creating programs</h4>
+    <h4 style="top:9.5em">using existing software and webtechnology</h4>
 
   </body>
 </html>
