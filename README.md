@@ -28,6 +28,15 @@ if __name__ == '__main__':
 
 ```
 
+To make an landing page pass a function to the lake class.
+```python
+def landing():
+    return render_template('index.html')
+
+app = Lake(landing)
+```
+
+
 The important classes are the app and remote class.
 The app servers only one function; serving the app to the user, while the
 remote function handles the direct communcation between the "backend" and "frontend" of the
