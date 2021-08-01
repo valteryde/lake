@@ -53,10 +53,14 @@ class Remote {
 
   }
 
-  do(com) {
+  do(com, ...args) {
+
+    for (var i = 0; i < args.length; i++) {
+      args[i] = JSON.stringify(args[i]);
+    }
 
     //i do not know why sending [execute] closes the server but it does...
-    this.socket.send('[exe]('+com+')')
+    this.socket.send('[exe]('+com+')'+'<'+args.join('!args!')+'>')
   }
 
 

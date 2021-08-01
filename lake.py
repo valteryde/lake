@@ -48,8 +48,6 @@ def getCache():
     return cache, json.loads(cache_text, strict=False)
 
 
-
-
 # *** init ***
 # create all files and folders
 # to be able to run the lake app
@@ -109,10 +107,14 @@ class Remote:
 
 
     # passed to the msg handeling in Lake class
-    def _executeFunction_(self, funcName):
+    def _executeFunction_(self, funcName, args=[]):
+        newArgs = []
+        if args:
+            for i in args.split('!args!'):
+                newArgs.append(json.loads(i, strict=False))
 
         try:
-            self.functions[funcName]()
+            self.functions[funcName](*newArgs)
         except NameError:
             return
 
@@ -236,7 +238,7 @@ class Lake:
             elif tp.lower() == 'exe':
 
                 # pass it to the remote class
-                self.remote._executeFunction_(msg[msg.index('(')+1:msg.index(')')])
+                self.remote._executeFunction_(msg[msg.index('(')+1:msg.index(')')], msg[msg.index('<')+1:msg.index('>')])
 
         else:
             print('[INFO] User sent msg without type')
