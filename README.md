@@ -19,9 +19,11 @@ def appView():
     return render_template('index.html')
 
 
+# remote functions can take obj/dict, str, number/int and arrays 
+# as paramters sent from the browser/app
 @remote.function
-def aFunctionThatCanBeCalledByTheBrowser():
-    print('Hello from the browser')
+def aFunctionThatCanBeCalledByTheBrowser(*args):
+    print('Hejsa fra browseren', *list(map(type, args)))
 
 if __name__ == '__main__':
     app.run()
