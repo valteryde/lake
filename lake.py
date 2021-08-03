@@ -13,7 +13,6 @@ import pathlib
 
 from flask import * #pip install package|module
 from .websocket_server import WebsocketServer #file
-# from bs4 import BeautifulSoup
 
 
 # *** CONST ***
@@ -104,6 +103,7 @@ class Remote:
 
     def __init__(self):
         self.functions = {}
+        start_new_thread(self._ping_routine_, ())
 
 
     # passed to the msg handeling in Lake class
@@ -117,6 +117,28 @@ class Remote:
             self.functions[funcName](*newArgs)
         except NameError:
             return
+
+
+    def _ping_routine_(self):
+        time.sleep(10)
+        while True:
+            time.sleep(10)
+            self._ping_()
+
+
+    def _ping_wait_(self):
+        time.sleep(SLEEP_TIME)
+        if not self.ponged:
+            print('\033[91m[INFO] Server closing\033[0m')
+            os.kill(PID, 9) #os.kill(PID, signal.SIGSTOP)
+
+
+    def _ping_(self):
+
+        #print('Pinging')
+        self.server.send_message_to_all('[ping]')
+        self.ponged = False
+        start_new_thread(self._ping_wait_, ())
 
 
     #the decorator
@@ -230,6 +252,10 @@ class Lake:
             time.sleep(SLEEP_TIME)
             self.websocketBypass = False
 
+        # pong message
+        if msg.lower() == '[pong]':
+            self.remote.ponged = True
+
 
         if '[' in msg and ']' in msg:
             tp = msg[msg.index('[')+1:msg.index(']')]
@@ -261,4 +287,5 @@ class Lake:
         os.system('clear') #only on darwin && linux
         start_new_thread(self._startWebsocketServer_, ())
         start_new_thread(webbrowser.open, (URL,))
+        start_new_thread(self.remote._ping_, ())
         self.app.run()

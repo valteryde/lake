@@ -30,8 +30,17 @@ function startWebSocket() {
   };
   socket.onmessage = function(s) {
     var msg = s.data
+
+    if (msg.toLowerCase() == '[ping]') {socket.send('[pong]')}
     if (msg.slice(msg.indexOf('[')+1,4).toLowerCase() == 'exe') window.remote._executeFunction_(msg.slice(msg.indexOf('(')+1,msg.indexOf(')')));
   };
+
+  socket.onclose = (...args)=> {
+    window.close()
+  }
+
+  console.log(socket)
+
   return socket
 }
 
@@ -79,7 +88,6 @@ window._exposedFunctions_ = {};
 const expose = func => {
   window._exposedFunctions_[func.name] = func
 }
-
 
 
 /* MAIN */
