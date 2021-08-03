@@ -35,7 +35,7 @@ To make an landing page pass a function to the lake class.
 def landing():
     return render_template('index.html')
 
-app = Lake(landing)
+app = Lake(name='my app',landingpage=landing)
 ```
 
 
