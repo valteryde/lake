@@ -24,8 +24,6 @@ DUMMY_DICT = {'intjected_html_files':["landing.html", "redirect.html"], 'init':F
 BASE_FOLDER = pathlib.Path().parent.absolute()
 
 
-
-
 # *** CODE TO BE PLOTTED INTO FILES ***
 HTML_JS_INJECT = """<script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script><script src="{{ url_for('static', filename='lake.js') }}" charset="utf-8"></script>"""
 
@@ -287,5 +285,4 @@ class Lake:
         os.system('clear') #only on darwin && linux
         start_new_thread(self._startWebsocketServer_, ())
         start_new_thread(webbrowser.open, (URL,))
-        start_new_thread(self.remote._ping_, ())
         self.app.run()

@@ -39,7 +39,7 @@ function startWebSocket() {
     window.close()
   }
 
-  console.log(socket)
+  // console.log(socket)
 
   return socket
 }
