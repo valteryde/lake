@@ -106,10 +106,12 @@ class Remote:
 
     # passed to the msg handeling in Lake class
     def _executeFunction_(self, funcName, args=[]):
+
         newArgs = []
         if args:
             for i in args.split('!args!'):
                 newArgs.append(json.loads(i, strict=False))
+
 
         try:
             self.functions[funcName](*newArgs)
@@ -142,6 +144,7 @@ class Remote:
     #the decorator
     def function(self, f):
         self.functions[f.__name__] = f
+
 
     # remote connection
     def do(self, funcname, *args):
